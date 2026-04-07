@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+pools.db
+.streamlit/secrets.toml
+*.vbs
+iniciar.bat
+Parar*.bat
+.fly/

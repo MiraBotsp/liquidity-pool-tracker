@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.pyo
+pools.db
+*.vbs
+iniciar.bat
+Parar*.bat
+.git/

@@ -345,8 +345,4 @@ def resumo_pools() -> List[Dict]:
         conn.close()
 
 
-# ─────────────────────────────────────────────
-# INICIALIZAÇÃO AUTOMÁTICA
-# ─────────────────────────────────────────────
-
-init_db()
+# init_db() é chamado explicitamente pelo app.py

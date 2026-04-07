@@ -9,7 +9,12 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-db.init_db()
+try:
+    db.init_db()
+except Exception as e:
+    st.error(f"Erro ao conectar ao banco de dados: {e}")
+    st.info("Verifique se o secret DATABASE_URL está configurado corretamente nas configurações do app.")
+    st.stop()
 
 # ── CSS Global ─────────────────────────────────────────────────────────────────
 st.markdown("""

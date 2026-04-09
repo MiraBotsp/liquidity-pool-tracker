@@ -117,46 +117,61 @@ def render():
                 total_a = sum(p["token_a_amount"] for p in posicoes)
                 total_b = sum(p["token_b_amount"] for p in posicoes)
 
-                col1, col2, col3 = st.columns(3)
-                col1.metric(f"Preço Médio {token_a}", utils.fmt_usd(pm_a))
-                col2.metric(f"Preço Médio {token_b}", utils.fmt_usd(pm_b))
-                col3.metric("Capital Investido", utils.fmt_usd(cap))
-                col4, col5, col6 = st.columns(3)
-                col4.metric("Aportes", str(n))
-                col5.metric(f"Total {token_a}", utils.fmt_token(total_a))
-                col6.metric(f"Total {token_b}", utils.fmt_token(total_b))
+                st.markdown("---")
 
-                # Gráfico
-                df = pd.DataFrame(posicoes)
-                df["data"] = pd.to_datetime(df["data"])
-                df = df.sort_values("data")
-                df["acumulado"] = df["capital_usd"].cumsum()
+                # ── Layout: métricas (esquerda) | gráfico (direita) ──
+                col_metrics, col_chart = st.columns([1, 2], gap="large")
 
-                fig = go.Figure()
-                fig.add_trace(go.Bar(
-                    x=df["data"], y=df["capital_usd"],
-                    name="Aporte", marker_color="#2563EB", opacity=0.75,
-                ))
-                fig.add_trace(go.Scatter(
-                    x=df["data"], y=df["acumulado"],
-                    name="Acumulado", mode="lines+markers",
-                    line=dict(color="#10B981", width=2),
-                    fill="tozeroy", fillcolor="rgba(16,185,129,0.08)",
-                    yaxis="y2",
-                ))
-                fig.update_layout(
-                    paper_bgcolor="rgba(0,0,0,0)",
-                    plot_bgcolor="rgba(13,31,51,0.8)",
-                    font=dict(color="#F1F5F9"),
-                    margin=dict(l=10, r=10, t=30, b=10),
-                    height=240,
-                    legend=dict(orientation="h", y=1.08, x=1, xanchor="right"),
-                    yaxis=dict(title="Aporte USD", gridcolor="#1E3A5F"),
-                    yaxis2=dict(title="Acumulado", overlaying="y", side="right", gridcolor="#1E3A5F"),
-                    xaxis=dict(gridcolor="#1E3A5F"),
-                    title="Evolução do Capital Investido",
-                )
-                st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False}, key="posicoes_evolucao")
+                with col_metrics:
+                    st.markdown("##### 📊 Resumo")
+                    st.metric("Capital Total", utils.fmt_usd(cap))
+                    st.metric("Nº de Aportes", str(n))
+                    st.markdown("---")
+                    st.markdown("##### 💱 Preços Médios")
+                    st.metric(f"Preço Médio {token_a}", utils.fmt_usd(pm_a))
+                    st.metric(f"Preço Médio {token_b}", utils.fmt_usd(pm_b))
+                    st.markdown("---")
+                    st.markdown("##### 🪙 Quantidades")
+                    st.metric(f"Total {token_a}", utils.fmt_token(total_a))
+                    st.metric(f"Total {token_b}", utils.fmt_token(total_b))
+
+                with col_chart:
+                    st.markdown("##### 📈 Evolução do Capital Investido")
+                    df = pd.DataFrame(posicoes)
+                    df["data"] = pd.to_datetime(df["data"])
+                    df = df.sort_values("data")
+                    df["acumulado"] = df["capital_usd"].cumsum()
+
+                    fig = go.Figure()
+                    fig.add_trace(go.Bar(
+                        x=df["data"], y=df["capital_usd"],
+                        name="Aporte", marker_color="#2563EB", opacity=0.8,
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=df["data"], y=df["acumulado"],
+                        name="Acumulado", mode="lines+markers",
+                        line=dict(color="#10B981", width=2),
+                        fill="tozeroy", fillcolor="rgba(16,185,129,0.08)",
+                        yaxis="y2",
+                    ))
+                    fig.update_layout(
+                        paper_bgcolor="rgba(0,0,0,0)",
+                        plot_bgcolor="rgba(13,31,51,0.6)",
+                        font=dict(color="#F1F5F9"),
+                        margin=dict(l=10, r=10, t=10, b=10),
+                        height=380,
+                        legend=dict(orientation="h", y=1.05, x=1, xanchor="right",
+                                    bgcolor="rgba(0,0,0,0)"),
+                        yaxis=dict(title="Aporte (USD)", gridcolor="#1E3A5F",
+                                   tickfont=dict(size=10)),
+                        yaxis2=dict(title="Acumulado (USD)", overlaying="y",
+                                    side="right", gridcolor="#1E3A5F",
+                                    tickfont=dict(size=10)),
+                        xaxis=dict(gridcolor="#1E3A5F", tickfont=dict(size=10)),
+                    )
+                    st.plotly_chart(fig, use_container_width=True,
+                                    config={"displayModeBar": False},
+                                    key="posicoes_evolucao")
 
     # ══════════════════════════════════════════════════════════
     # TAB 2 — REGISTRAR APORTE

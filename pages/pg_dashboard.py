@@ -454,9 +454,7 @@ def _gauge_fig(valor: float, cor: str) -> go.Figure:
 
 
 def _render_gauge_apr(apr_medio: float, apy: float, placeholder) -> None:
-    """Anima o gauge de 0 → apr_medio via Python loop no st.empty placeholder."""
-    import time
-
+    """Renderiza o gauge de APR diretamente sem animação."""
     if apr_medio >= 15:
         cor = "#10B981"
         zona = "Excelente"
@@ -467,28 +465,12 @@ def _render_gauge_apr(apr_medio: float, apy: float, placeholder) -> None:
         cor = "#EF4444"
         zona = "Baixo"
 
-    key = f"gauge_played_{round(apr_medio, 2)}"
-    ja_animou = st.session_state.get(key, False)
-
-    if not ja_animou:
-        steps = 30
-        for i in range(steps + 1):
-            val = apr_medio * i / steps
-            placeholder.plotly_chart(
-                _gauge_fig(val, cor),
-                use_container_width=True,
-                config={"displayModeBar": False},
-                key=f"gauge_anim_{i}",
-            )
-            time.sleep(0.025)
-        st.session_state[key] = True
-    else:
-        placeholder.plotly_chart(
-            _gauge_fig(apr_medio, cor),
-            use_container_width=True,
-            config={"displayModeBar": False},
-            key="gauge_final",
-        )
+    placeholder.plotly_chart(
+        _gauge_fig(apr_medio, cor),
+        use_container_width=True,
+        config={"displayModeBar": False},
+        key="gauge_apr",
+    )
 
     # Labels abaixo do gauge — bem espaçados
     st.markdown(

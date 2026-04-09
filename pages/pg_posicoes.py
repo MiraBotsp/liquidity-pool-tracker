@@ -11,19 +11,6 @@ import utils
 # HELPERS
 # ──────────────────────────────────────────────────────────────
 
-def _metric_card(label: str, value: str, color: str = "#F1F5F9", sub: str = "") -> str:
-    sub_html = f'<div style="color:#64748B;font-size:11px;margin-top:4px">{sub}</div>' if sub else ""
-    return f"""
-    <div style="background:#0D1F33;border-radius:12px;padding:18px 20px;flex:1;min-width:140px">
-        <div style="color:#94A3B8;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">{label}</div>
-        <div style="color:{color};font-size:22px;font-weight:700;line-height:1">{value}</div>
-        {sub_html}
-    </div>"""
-
-
-def _render_cards(cards_html: list[str], gap: str = "12px"):
-    html = f'<div style="display:flex;gap:{gap};flex-wrap:wrap;margin-bottom:16px">{"".join(cards_html)}</div>'
-    st.markdown(html, unsafe_allow_html=True)
 
 
 def _pool_header_html(pool: dict) -> str:
@@ -130,16 +117,14 @@ def render():
                 total_a = sum(p["token_a_amount"] for p in posicoes)
                 total_b = sum(p["token_b_amount"] for p in posicoes)
 
-                cards = [
-                    _metric_card(f"Preço Médio {token_a}", utils.fmt_usd(pm_a), "#10B981"),
-                    _metric_card(f"Preço Médio {token_b}", utils.fmt_usd(pm_b), "#10B981"),
-                    _metric_card("Capital Investido", utils.fmt_usd(cap), "#F1F5F9"),
-                    _metric_card("Aportes", str(n), "#60A5FA"),
-                    _metric_card(f"Total {token_a}", utils.fmt_token(total_a), "#94A3B8"),
-                    _metric_card(f"Total {token_b}", utils.fmt_token(total_b), "#94A3B8"),
-                ]
-                html_row = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">' + "".join(cards) + "</div>"
-                st.markdown(html_row, unsafe_allow_html=True)
+                col1, col2, col3 = st.columns(3)
+                col1.metric(f"Preço Médio {token_a}", utils.fmt_usd(pm_a))
+                col2.metric(f"Preço Médio {token_b}", utils.fmt_usd(pm_b))
+                col3.metric("Capital Investido", utils.fmt_usd(cap))
+                col4, col5, col6 = st.columns(3)
+                col4.metric("Aportes", str(n))
+                col5.metric(f"Total {token_a}", utils.fmt_token(total_a))
+                col6.metric(f"Total {token_b}", utils.fmt_token(total_b))
 
                 # Gráfico
                 df = pd.DataFrame(posicoes)

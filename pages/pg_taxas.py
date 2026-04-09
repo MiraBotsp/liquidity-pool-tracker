@@ -307,7 +307,7 @@ def render():
             }
         )
 
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False}, key="taxas_evolucao")
 
     # ------------------------------------------------------------------ #
     # SEÇÃO 5: COMPARATIVO ENTRE POOLS (somente se há >1 pool)
@@ -362,4 +362,4 @@ def render():
                 title="Total de Fees por Pool",
             )
 
-            st.plotly_chart(fig_comp, use_container_width=True, config={"displayModeBar": False})
+            st.plotly_chart(fig_comp, use_container_width=True, config={"displayModeBar": False}, key="taxas_comparativo")

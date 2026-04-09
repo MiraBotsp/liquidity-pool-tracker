@@ -172,7 +172,7 @@ def render():
                     xaxis=dict(gridcolor="#1E3A5F"),
                     title="Evolução do Capital Investido",
                 )
-                st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+                st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False}, key="posicoes_evolucao")
 
     # ══════════════════════════════════════════════════════════
     # TAB 2 — REGISTRAR APORTE

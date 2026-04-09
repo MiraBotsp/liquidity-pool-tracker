@@ -990,7 +990,7 @@ body{{background:transparent;font-family:'Segoe UI',Inter,sans-serif;padding:4px
 
     if capital > 0:
         fig_wf = _grafico_waterfall(metricas)
-        st.plotly_chart(fig_wf, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(fig_wf, use_container_width=True, config={"displayModeBar": False}, key="analise_waterfall")
     else:
         st.info("Dados insuficientes para o waterfall chart.")
 
@@ -1112,7 +1112,7 @@ body{{background:transparent;font-family:'Segoe UI',Inter,sans-serif}}
             xaxis=dict(gridcolor="#0F1F35", tickfont=dict(color="#64748B", size=10)),
         ))
         _fig_tl.update_layout(**_layout_tl)
-        st.plotly_chart(_fig_tl, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(_fig_tl, use_container_width=True, config={"displayModeBar": False}, key="analise_timeline")
     else:
         st.info("Dados insuficientes para a timeline IL vs Fees.")
 
@@ -1125,7 +1125,7 @@ body{{background:transparent;font-family:'Segoe UI',Inter,sans-serif}}
 
     if use_precos and valor_hold is not None:
         fig_hodl = _grafico_lp_vs_hodl(metricas, token_a, token_b)
-        st.plotly_chart(fig_hodl, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(fig_hodl, use_container_width=True, config={"displayModeBar": False}, key="analise_hodl_com_precos")
         lp_total = capital + fees
         _sb_html = _scoreboard_html(lp_total, valor_hold, capital)
         components.html(
@@ -1150,7 +1150,7 @@ body{{background:transparent;font-family:'Segoe UI',Inter,sans-serif;padding:2px
     else:
         # Gráfico simplificado sem HODL
         fig_hodl = _grafico_lp_vs_hodl(metricas, token_a, token_b)
-        st.plotly_chart(fig_hodl, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(fig_hodl, use_container_width=True, config={"displayModeBar": False}, key="analise_hodl_sem_precos")
         st.info("Insira os preços atuais para ver o comparativo LP vs HODL completo.")
 
     st.markdown("<hr>", unsafe_allow_html=True)
@@ -1169,7 +1169,7 @@ body{{background:transparent;font-family:'Segoe UI',Inter,sans-serif;padding:2px
             preco_medio_a=pm_a,
             preco_atual_a=preco_a if use_precos else None,
         )
-        st.plotly_chart(fig_il, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(fig_il, use_container_width=True, config={"displayModeBar": False}, key="analise_curva_il")
 
         # Legenda de referência
         st.markdown("""
@@ -1208,7 +1208,7 @@ body{{background:transparent;font-family:'Segoe UI',Inter,sans-serif;padding:2px
         fig_heat = _grafico_heatmap_mensal(taxas, posicoes)
         if fig_heat:
             st.plotly_chart(fig_heat, use_container_width=True,
-                            config={"displayModeBar": False})
+                            config={"displayModeBar": False}, key="analise_heatmap")
         else:
             st.info("Dados insuficientes para o heatmap mensal.")
     else:
@@ -1413,7 +1413,7 @@ body{{background:transparent;font-family:'Segoe UI',Inter,sans-serif}}
         dias_futuro=dias_futuro,
         fee_rate_dia=fee_rate_dia,
     )
-    st.plotly_chart(fig_sim, use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(fig_sim, use_container_width=True, config={"displayModeBar": False}, key="analise_simulacao")
 
     st.markdown("<hr>", unsafe_allow_html=True)
 

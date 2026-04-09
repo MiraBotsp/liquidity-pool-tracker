@@ -23,7 +23,7 @@ def _get_database_url() -> str:
 
 def _get_conn():
     url = _get_database_url()
-    conn = psycopg2.connect(url, cursor_factory=RealDictCursor)
+    conn = psycopg2.connect(url, cursor_factory=RealDictCursor, connect_timeout=10)
     return conn
 
 

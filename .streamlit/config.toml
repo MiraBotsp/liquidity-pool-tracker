@@ -7,5 +7,4 @@ textColor = "#F1F5F9"
 font = "sans serif"
 
 [server]
-port = 8504
 headless = true

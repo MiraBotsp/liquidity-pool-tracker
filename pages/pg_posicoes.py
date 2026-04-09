@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import plotly.graph_objects as go
 import pandas as pd
 from datetime import date
@@ -24,7 +23,7 @@ def _metric_card(label: str, value: str, color: str = "#F1F5F9", sub: str = "") 
 
 def _render_cards(cards_html: list[str], gap: str = "12px"):
     html = f'<div style="display:flex;gap:{gap};flex-wrap:wrap;margin-bottom:16px">{"".join(cards_html)}</div>'
-    components.html(html, height=110, scrolling=False)
+    st.markdown(html, unsafe_allow_html=True)
 
 
 def _pool_header_html(pool: dict) -> str:
@@ -114,7 +113,7 @@ def render():
             pool = opcoes[label]
 
             # Header visual da pool
-            components.html(_pool_header_html(pool), height=90, scrolling=False)
+            st.markdown(_pool_header_html(pool), unsafe_allow_html=True)
 
             posicoes = db.listar_posicoes(pool["id"])
 
@@ -140,7 +139,7 @@ def render():
                     _metric_card(f"Total {token_b}", utils.fmt_token(total_b), "#94A3B8"),
                 ]
                 html_row = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">' + "".join(cards) + "</div>"
-                components.html(html_row, height=120, scrolling=False)
+                st.markdown(html_row, unsafe_allow_html=True)
 
                 # Gráfico
                 df = pd.DataFrame(posicoes)
@@ -269,8 +268,7 @@ def render():
 
                 for pos in posicoes3_sorted:
                     # Card visual
-                    card_h = 100 if not pos.get("observacao") else 120
-                    components.html(_posicao_card_html(pos, token_a3, token_b3, pos["id"]), height=card_h, scrolling=False)
+                    st.markdown(_posicao_card_html(pos, token_a3, token_b3, pos["id"]), unsafe_allow_html=True)
 
                     # Botão de deletar logo abaixo do card
                     del_key = f"del_confirm_{pos['id']}"
@@ -347,7 +345,7 @@ def render():
         else:
             st.markdown("### Pools")
             for pool in todas_pools:
-                components.html(_pool_header_html(pool), height=86, scrolling=False)
+                st.markdown(_pool_header_html(pool), unsafe_allow_html=True)
 
                 c_act, c_range, c_del = st.columns([2, 4, 2])
 

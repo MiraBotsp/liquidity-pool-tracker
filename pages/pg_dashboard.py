@@ -478,6 +478,7 @@ def _render_gauge_apr(apr_medio: float, apy: float, placeholder) -> None:
                 _gauge_fig(val, cor),
                 use_container_width=True,
                 config={"displayModeBar": False},
+                key=f"gauge_anim_{i}",
             )
             time.sleep(0.025)
         st.session_state[key] = True
@@ -486,6 +487,7 @@ def _render_gauge_apr(apr_medio: float, apy: float, placeholder) -> None:
             _gauge_fig(apr_medio, cor),
             use_container_width=True,
             config={"displayModeBar": False},
+            key="gauge_final",
         )
 
     # Labels abaixo do gauge — bem espaçados

@@ -1,0 +1,1 @@
+# Um endereço por linha (mint do token ou carteira do dev). Comentários com #.

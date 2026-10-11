@@ -1,0 +1,95 @@
+# Spider Desk — todos os limiares ficam aqui. Validado por pydantic na inicialização
+# (backend/core/config.py). Valor desconhecido ou fora de faixa = a mesa não sobe.
+
+mode: paper            # paper | live  (live também exige LIVE_TRADING=true no .env — Fase 7)
+data_source: auto      # auto | real | mock  (auto = real se as APIs responderem, senão mock)
+db_path: spider_desk.db
+
+crawl:
+  interval_s: 60
+  max_tokens_per_cycle: 30
+  chain_id: solana
+  quote_mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v   # USDC
+
+rate_limits:            # requisições por minuto, por host (abaixo dos limites públicos documentados)
+  dexscreener_profiles_rpm: 50   # doc: 60 rpm
+  dexscreener_pairs_rpm: 250     # doc: 300 rpm
+  jupiter_rpm: 50                # lite-api (gratuita): 60 rpm
+  solana_rpc_rpm: 90
+
+http:
+  timeout_s: 10
+  retries: 3
+  backoff_base_s: 0.5
+
+gate:
+  min_age_minutes: 15
+  min_liquidity_usd: 12000
+  min_volume_h24: 40000
+  min_mcap_usd: 60000
+  min_trades_h24: 150
+  max_top_wallet: 0.05          # excluindo pool de liquidez e contas de burn
+  max_top_10: 0.60
+  require_mint_authority_revoked: true
+  require_freeze_authority_null: true
+  require_sell_route: true      # Jupiter retorna cotação de VENDA válida (evita honeypot)
+  max_sell_price_impact: 0.05   # para o tamanho máximo de ticket
+  blocklist_file: blocklist.txt # devs/tokens já marcados como golpe
+  # Donos de contas que não contam como "carteira" na concentração (burn + autoridades de AMM).
+  excluded_owners:
+    - "1nc1nerator11111111111111111111111111111111"         # incinerador
+    - "11111111111111111111111111111111"                    # system program
+    - "5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1"        # Raydium AMM v4 authority
+    - "GpMZbSM2GgvTKHJirzeGfMFoaZ8UR2X7F4v8vHTvxFbL"        # Raydium CPMM authority
+
+jev:
+  model: "~typesafe/jev-latest"
+  base_url: https://openrouter.ai/api/alpha
+  timeout_s: 20
+
+scan:
+  min_real: 0.60
+
+soft:
+  momentum_already_spent_max: 0.60    # SCAN
+  dev_wallet_clean_min: 0.70          # VET
+  rug_probability_max: 0.20           # VET (p de high)
+  concentration_is_exit_risk_max: 0.55 # VET
+  liquidity_fits_ticket_min: 0.60     # Python
+  social_farm_suspected: false        # SOCIAL
+  min_sentiment: 0.1                  # SOCIAL
+
+chief:
+  max_per_cycle: 3
+  model: claude-opus-5-5
+
+social:
+  model: claude-sonnet-5-5
+
+journal:
+  model: claude-sonnet-5-5
+  dir: journal
+
+paper:
+  bankroll_usd: 1000
+  auto_approve: false
+
+risk:
+  per_trade_pct: 0.01
+  max_ticket_pct_bankroll: 0.02
+  max_ticket_pct_liquidity: 0.01
+  max_open_positions: 1
+  daily_loss_limit_pct: 0.10
+  max_consecutive_losses: 3
+  cooldown_minutes: 60
+  poll_seconds: 15
+
+size:
+  kelly_min_samples: 100
+
+card:
+  ttl_seconds: 90
+  max_drift_pct: 0.03
+
+budget:
+  daily_usd: 5.0
